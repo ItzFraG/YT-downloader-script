@@ -20,4 +20,4 @@
 Чтобы быстро скачать и запустить скрипт без лишних настроек, просто вставь эту команду в свой терминал:
 
 ```bash
-curl -O [https://raw.githubusercontent.com/ВАШ_НИК_НА_ГИТХАБЕ/ИМЯ_РЕПОЗИТОРИЯ/main/dlyt.sh](https://raw.githubusercontent.com/ItzFraG/YT-downloader-script.git/main/dlyt.sh) && bash dlyt.sh
+curl -LO https://raw.githubusercontent.com/ItzFraG/YT-downloader-script/main/dlyt.sh && bash dlyt.sh
