@@ -2,4 +2,7 @@
 Bash-скрипт для скачивания видео с ютуба
 
 Запустить:
-```git clone https://github.com/ItzFraG/YT-downloader-script.git```
+```bash
+git clone https://github.com/ItzFraG/YT-downloader-script.git
+cd YT-downloader-script
+bash dlyt.sh```
