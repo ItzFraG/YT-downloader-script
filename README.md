@@ -1,23 +1,13 @@
-# 📥 Универсальный YouTube Загрузчик (Bash Script)
+📥 Universal YouTube Downloader (Bash Script)
+A simple and powerful Bash script for downloading video and audio from YouTube. Works automatically on Ubuntu, Debian, and Termux.
+The script automatically checks, installs, and updates all necessary dependencies (yt-dlp, ffmpeg, curl), and then provides a user-friendly menu for downloading.
 
-Простой и мощный Bash-скрипт для скачивания видео и аудио с YouTube. Автоматически работает на **Ubuntu**, **Debian** и в **Termux**. 
-
-Скрипт сам проверяет, устанавливает и обновляет все необходимые зависимости (`yt-dlp`, `ffmpeg`, `curl`), после чего предлагает удобное меню для скачивания.
-
----
-
-## 🚀 Возможности
-
-* 🎥 **Обычное видео:** Скачивание видеоряда и аудиоряда в максимальном доступном качестве и автоматическая склейка в формат `.mp4`.
-* 🔇 **Только видеоряд:** Скачивание только картинки (без звука) в максимальном качестве.
-* 🎵 **Только аудио:** Извлечение аудиодорожки из видео и конвертация в чистый `.mp3` с максимальным битрейтом.
-* 📦 **Полная автоматизация:** Не нужно вручную ставить кодеки или утилиты — скрипт сделает всё сам при первом запуске.
-
----
-
-## 🛠 Запуск в одну команду
-
-Чтобы быстро скачать и запустить скрипт без лишних настроек, просто вставь эту команду в свой терминал:
-
+🚀 Features:
+🎥 Standard Video: Downloads both video and audio at the maximum available quality and automatically merges them into .mp4 format.
+🔇 Video Only: Downloads the video stream only (no sound) at the highest quality.
+🎵 Audio Only: Extracts the audio track from the video and converts it into a clean .mp3 with the maximum bitrate.
+📦 Full Automation: No need to manually install codecs or utilities — the script handles everything during the first run.
+🛠 One-Command Launch
+To quickly download and run the script without any extra setup, just paste this command into your terminal:
 ```bash
 curl -LO https://raw.githubusercontent.com/ItzFraG/YT-downloader-script/main/dlyt.sh && bash dlyt.sh
