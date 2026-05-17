@@ -1,79 +1,98 @@
 #!/bin/bash
 
-# 1. Автоматическая проверка и установка зависимостей (Ubuntu / Debian / Termux)
-echo "Проверка установленных программ..."
-if command -v pkg &> /dev/null; then
-    # Настройки для Termux
-    pkg update -y
-    command -v curl &> /dev/null || pkg install curl -y
-    command -v ffmpeg &> /dev/null || pkg install ffmpeg -y
-    command -v python &> /dev/null || pkg install python -y
-else
-    # Настройки для Ubuntu / Debian
-    sudo apt update -y
-    command -v curl &> /dev/null || sudo apt install curl -y
-    command -v ffmpeg &> /dev/null || sudo apt install ffmpeg -y
-    command -v python3 &> /dev/null || sudo apt install python3 -y
-fi
+# --- Цветовая палитра Aqua ---
+AQUA='\033[0;36m'
+NC='\033[0m'
 
-# 2. Установка/Обновление самого yt-dlp
-if command -v pkg &> /dev/null; then
-    curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o $PREFIX/bin/yt-dlp
-    chmod a+rx $PREFIX/bin/yt-dlp
+# --- Логика выбора языка ---
+echo -e "${AQUA}Select language / Выберите язык:${NC}"
+echo "1) English"
+echo "2) Русский"
+read -r LAN_CHOICE
+
+if [ "$LAN_CHOICE" == "2" ]; then
+    # Тексты на русском
+    T_PREP="=== Подготовка окружения... ==="
+    T_TERMUX="Настройка доступа к памяти Android..."
+    T_YTDLP="Проверка и обновление yt-dlp..."
+    T_PATH="Файлы будут сохранены в:"
+    T_INSERT="Вставьте ссылку на видео: "
+    T_MODE="Выберите режим:"
+    T_M1="Видео (MP4, Макс качество)"
+    T_M2="Только видеоряд (Без звука)"
+    T_M3="Только аудио (MP3)"
+    T_ERR="Ошибка выбора"
+    T_DONE="Готово! Проверьте папку."
 else
-    sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp
-    sudo chmod a+rx /usr/local/bin/yt-dlp
+    # Тексты на английском
+    T_PREP="=== Preparing environment... ==="
+    T_TERMUX="Setting up Android storage access..."
+    T_YTDLP="Checking and updating yt-dlp..."
+    T_PATH="Files will be saved to:"
+    T_INSERT="Insert video link: "
+    T_MODE="Select mode:"
+    T_M1="Video (MP4, Best quality)"
+    T_M2="Video only (No sound)"
+    T_M3="Audio only (MP3)"
+    T_ERR="Selection error"
+    T_DONE="Done! Check your folder."
 fi
 
 clear
-echo "=================================================="
-echo "    Универсальный загрузчик с YouTube!     "
-echo "=================================================="
-echo ""
+echo -e "${AQUA}$T_PREP${NC}"
 
-# 3. Запрос ссылки
-echo -n "Вставьте ссылку на видео: "
+# --- Проверка платформы (Termux vs Linux) ---
+if [ -d "$HOME/.termux" ]; then
+    # Это Termux
+    if [ ! -d "$HOME/storage" ]; then
+        echo "$T_TERMUX"
+        termux-setup-storage
+        sleep 2
+    fi
+    pkg update -y && pkg install python ffmpeg curl -y
+    BIN_PATH="$PREFIX/bin/yt-dlp"
+    # Создаем папку в загрузках телефона для удобства
+    mkdir -p /sdcard/Download/YT-Downloads
+    cd /sdcard/Download/YT-Downloads
+else
+    # Это Ubuntu/Debian
+    sudo apt update && sudo apt install python3 ffmpeg curl -y
+    BIN_PATH="/usr/local/bin/yt-dlp"
+fi
+
+# --- Установка/Обновление yt-dlp ---
+if [ -d "$HOME/.termux" ]; then
+    curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o $BIN_PATH
+else
+    sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o $BIN_PATH
+fi
+chmod a+rx $BIN_PATH
+
+clear
+echo -e "${AQUA}========================================"
+echo "    YOUTUBE DOWNLOADER (STABLE)        "
+echo -e "========================================${NC}"
+echo -e "$T_PATH ${AQUA}$(pwd)${NC}\n"
+
+echo -n "$T_INSERT"
 read -r URL
 
 if [ -z "$URL" ]; then
-    echo "Ошибка: Ссылка не может быть пустой!"
+    echo "URL is empty!"
     exit 1
 fi
 
-# 4. Меню выбора режима
-echo ""
-echo "Что нужно сделать?"
-echo "1) Скачать обычное видео (Макс. качество + Звук)"
-echo "2) Скачать только видеоряд (Без звука)"
-echo "3) Скачать только аудиодорожку (В формате MP3)"
-echo "--------------------------------------------------"
-echo -n "Выберите вариант (1, 2 или 3): "
-read -r REZHIM
+echo -e "\n$T_MODE"
+echo "1) $T_M1"
+echo "2) $T_M2"
+echo "3) $T_M3"
+read -r OPT
 
-echo ""
-case $REZHIM in
-    1)
-        echo "Скачиваю видео со звуком в лучшем качестве..."
-        yt-dlp -f "bestvideo+bestaudio/best" --merge-output-format mp4 "$URL"
-        ;;
-    2)
-        echo "Скачиваю только видео (без звука)..."
-        yt-dlp -f "bestvideo" --merge-output-format mp4 "$URL"
-        ;;
-    3)
-        echo "Скачиваю аудио и конвертирую в MP3..."
-        yt-dlp -x --audio-format mp3 --audio-quality 0 "$URL"
-        ;;
-    *)
-        echo "Неверный выбор! Отмена."
-        exit 1
-        ;;
+case $OPT in
+    1) yt-dlp -f "bestvideo+bestaudio/best" --merge-output-format mp4 "$URL" ;;
+    2) yt-dlp -f "bestvideo" --merge-output-format mp4 "$URL" ;;
+    3) yt-dlp -x --audio-format mp3 "$URL" ;;
+    *) echo "$T_ERR"; exit 1 ;;
 esac
 
-if [ $? -eq 0 ]; then
-    echo ""
-    echo "Успешно скачано в текущую папку!"
-else
-    echo ""
-    echo "Произошла ошибка при скачивании."
-fi
+echo -e "\n${AQUA}$T_DONE${NC}"
