@@ -1,3 +1,6 @@
+
+choose your language: [Русский](https://github.com/ImFraGushka/YT-downloader-script/blob/main/README.ru.md)
+
 # 📥 Universal YouTube Downloader (Bash Script)
 A simple and powerful Bash script for downloading video and audio from YouTube. Works automatically on Ubuntu, Debian, and Termux.
 The script automatically checks, installs, and updates all necessary dependencies (yt-dlp, ffmpeg, curl), and then provides a user-friendly menu for downloading.
