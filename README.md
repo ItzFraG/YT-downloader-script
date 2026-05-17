@@ -10,4 +10,4 @@ The script automatically checks, installs, and updates all necessary dependencie
 🛠 One-Command Launch
 To quickly download and run the script without any extra setup, just paste this command into your terminal:
 ```bash
-curl -LO https://raw.githubusercontent.com/ItzFraG/YT-downloader-script/main/dlyt.sh && bash dlyt.sh
+curl -LO https://raw.githubusercontent.com/ImFraGushka/YT-downloader-script/main/dlyt.sh && bash dlyt.sh
